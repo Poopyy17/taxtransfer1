@@ -75,6 +75,13 @@ export default function InfoScreen() {
         "State ID",
     ];
 
+    const categoryOptions = [
+        "Property",
+        "Tax Credits",
+        "Tax Deductions",
+        "Income Tax",
+    ];
+
     const submitHandler = (e) => {
         e.preventDefault();
         ctxDispatch({ type: 'SAVE_SHIPPING_ADDRESS',
@@ -153,11 +160,18 @@ export default function InfoScreen() {
 
                     <Form.Group className="mb-3" controlId="category">
                         <Form.Label>Category</Form.Label>
-                        <Form.Control
+                        <Form.Select
                             value={category}
                             onChange={(e) => setCategory(e.target.value)}
                             required
-                        />
+                        >
+                            <option value="">Select a category</option>
+                            {categoryOptions.map((id, index) => (
+                                <option key={index} value={id}>
+                                    {id}
+                                </option>
+                            ))}
+                        </Form.Select>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="recipientName">

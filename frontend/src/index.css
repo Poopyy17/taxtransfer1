@@ -22,6 +22,25 @@ main {
   align-content: center;
 }
 
+.btn-primary1 {
+  background-color: #f0c040;
+  color: black;
+  border: none;
+  align-content: center;
+  border-radius: 0.25rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  text-transform: uppercase;
+  transition: background-color 0.3s;
+}
+
+
+.btn-primary:hover {
+  background-color: #f1d248;
+  color: black;
+  transform: scale(1.05);
+}
+
 .centered-button {
   display: block;
   margin: 0 auto;
@@ -116,4 +135,82 @@ main {
 
 .button-group {
   display: flex;
+}
+
+/* index.css */
+
+/* Gradient animation keyframes */
+@-webkit-keyframes AnimationName {
+  0% { background-position: 0% 15%; }
+  50% { background-position: 100% 86%; }
+  100% { background-position: 0% 15%; }
+}
+
+@-moz-keyframes AnimationName {
+  0% { background-position: 0% 15%; }
+  50% { background-position: 100% 86%; }
+  100% { background-position: 0% 15%; }
+}
+
+@keyframes AnimationName {
+  0% { background-position: 0% 15%; }
+  50% { background-position: 100% 86%; }
+  100% { background-position: 0% 15%; }
+}
+
+.hero-section {
+  background: linear-gradient(225deg, #1d57b7, #17a6c6, #1432d7);
+  background-size: 600% 600%;
+  height: 70vh; /* Adjusted height */
+  width: 100vw; /* Full viewport width */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  overflow: hidden; /* Hide scrollbar in this section only */
+  position: absolute; /* Positioned relative to the viewport */
+  left: 0; /* Sticks to the left side of the viewport */
+  z-index: 1; /* Ensure it stays above other content */
+  margin-top: 2rem; /* Removed margin-top */
+}
+
+.hero-content {
+  z-index: 2; /* Ensure content is above background */
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  margin: 0;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  margin-top: 1rem;
+}
+
+.content-section {
+  padding: 2rem;
+  background: white;
+  z-index: 2; /* Ensure it stays above the background but below the hero section */
+}
+
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Footer styling */
+.footer {
+  padding: 1rem;
+  background: #333;
+  color: white;
+  text-align: center;
+}
+
+/* Remove global overflow hidden to ensure footer is visible */
+body {
+  margin: 0;
+  overflow: auto;
 }

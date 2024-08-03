@@ -1,9 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
-import axios from "axios";
 import { useContext } from "react";
 import { Store } from "../Store";
+import '../index.css';  // Ensure this import is present
 
 function Service(props) {
     const navigate = useNavigate();
@@ -18,20 +18,18 @@ function Service(props) {
     };
 
     return (
-        <Card>
-            <Link to={`/service/${service.slug}`}>
-                <img 
-                    className="card-img-top"
-                    src={service.image} 
-                    alt={service.name} 
-                />
-            </Link>
-            <Card.Body className="d-flex flex-column align-items-center">
-                <Link to={`/service/${service.slug}`} className="no-underline">
-                    <Card.Title className="service-name">{service.name}</Card.Title>
+        <Card className="service-card fancy-card">
+            <Card.Body className="text-center">
+                <Link to={`/service/${service.slug}`} className="service-link">
+                    <Card.Title className="service-title">{service.name}</Card.Title>
                 </Link>
-                <Card.Text>₱{service.price}</Card.Text>
-                <Button onClick={addToCartHandler} className="w-100 get-started">Get Started</Button>
+                <Card.Text className="service-price">₱{service.price}</Card.Text>
+                <Button
+                    onClick={addToCartHandler}
+                    className="btn-primary w-100"
+                >
+                    Get Started
+                </Button>
             </Card.Body>
         </Card>
     );

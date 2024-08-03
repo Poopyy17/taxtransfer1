@@ -77,9 +77,6 @@ export default function InfoScreen() {
 
     const categoryOptions = [
         "Property",
-        "Tax Credits",
-        "Tax Deductions",
-        "Income Tax",
     ];
 
     const submitHandler = (e) => {

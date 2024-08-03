@@ -362,7 +362,7 @@ export default function OrderScreen() {
                                     </tbody>
                                 </Table>
                             </Card.Text>
-                            <Card.Title>Validation</Card.Title>
+                            <Card.Title>Validation Status</Card.Title>
                             {order.isApproved ? (
                                 <MessageBox variant='success'>
                                     Approved at {order.approvedAt}
@@ -496,7 +496,7 @@ export default function OrderScreen() {
         <div className='my-3'>
             <div className='validation-header'>
                 <h2 ref={reviewsRef}>
-                Validation
+                Validation Result
                 </h2>
                 <div className='button-group'>
                 <Button

@@ -83,11 +83,19 @@ function ServiceScreen() {
                     <Helmet>
                         <title>{service.name}</title>
                     </Helmet>
-                    <h1>{service.name}</h1>
+                    <h1><strong>{service.name}</strong></h1>
                   </ListGroup.Item>
                   <ListGroup.Item>
-                    Description:
-                    <p>{service.description}</p>
+                    <strong>Requirements:</strong>
+                    <p style={{ lineHeight: '1.9' }}>
+                      •Title of new owner (Certified Photocopy)<br />
+                      •Deed of Sale/Donation/Exchange Certificate of Consolidation/Extra Judicial with Publication (Photocopy)<br />
+                      •Current Realty Tax with Tax Clearance (Photocopy)<br />
+                      •ECAR Certificate Authorizing Registration from BIR (Photocopy)<br />
+                      •Transfer Tax Receipt with Confirmation/Certificate of Payment (Photocopy)<br />
+                      •Picture of Property (Colored 3R)<br />
+                      •Presentor ID (Photocopy)<br />
+                  </p>
                   </ListGroup.Item>
                 </ListGroup>
             </Col>
@@ -98,7 +106,7 @@ function ServiceScreen() {
                         <ListGroup.Item>
                         <Row>
                             <Col>Price: </Col>
-                            <Col>₱{service.price}</Col>
+                            <Col><strong>₱{service.price}</strong></Col>
                         </Row>
                         </ListGroup.Item>
                         <ListGroup.Item>

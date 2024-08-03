@@ -13,7 +13,9 @@ function reducer(state, action) {
         case 'FETCH_REQUEST':
             return { ...state, loading: true };
         case 'FETCH_SUCCESS':
-            return { ...state, orders: action.payload, loading: false };
+            // Sort orders by date in descending order
+            const sortedOrders = action.payload.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            return { ...state, orders: sortedOrders, loading: false };
         case 'FETCH_FAIL':
             return { ...state, loading: false, error: action.payload };
         default:
@@ -29,6 +31,7 @@ export default function ReqHistoryScreen() {
     const [{ loading, error, orders }, dispatch] = useReducer(reducer, {
         loading: true,
         error: '',
+        orders: [],
     });
 
     useEffect(() => {

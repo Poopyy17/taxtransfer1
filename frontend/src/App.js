@@ -25,6 +25,8 @@ import AdminRoute from './Component/AdminRoute';
 import ValidationScreen from './screens/ValidationScreen';
 import UserList from './screens/UserList';
 import UserEditScreen from './screens/UserEditScreen';
+import ForgetPasswordScreen from './screens/ForgetPasswordScreen';
+import ResetPasswordScreen from './screens/ResetPasswordScreen';
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -66,9 +68,11 @@ function App() {
                       <LinkContainer to='/profile'>
                         <NavDropdown.Item>User Profile</NavDropdown.Item>
                       </LinkContainer>
-                      <LinkContainer to='/history'>
-                        <NavDropdown.Item>History</NavDropdown.Item>
-                      </LinkContainer>
+                      {!userInfo.isAdmin && (
+                        <LinkContainer to='/history'>
+                          <NavDropdown.Item>History</NavDropdown.Item>
+                        </LinkContainer>
+                      )}
                       <NavDropdown.Divider />
                       <Link
                         className='dropdown-item'
@@ -118,6 +122,8 @@ function App() {
               <Route path="/requests/:id" element={<ProtectedRoute><OrderScreen /></ProtectedRoute>} />
               <Route path="/history" element={<ProtectedRoute><ReqHistoryScreen /></ProtectedRoute>} />
               <Route path="/profile" element={<ProtectedRoute><ProfileScreen /></ProtectedRoute>} />
+              <Route path="/forget-password" element={<ForgetPasswordScreen />} />
+              <Route path="/reset-password/:token" element={<ResetPasswordScreen />} />
               <Route path="/signin" element={<SigninScreen />} />
               <Route path="/signup" element={<SignupScreen />} />
             </Routes>

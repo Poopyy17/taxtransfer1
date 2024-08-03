@@ -1,6 +1,13 @@
 import jwt from 'jsonwebtoken';
 import mg from 'mailgun-js';
 
+export const baseUrl = () =>
+  process.env.BASE_URL
+  ? process.env.BASE_URL
+  : process.env.NODE_ENV !== 'production'
+  ? 'http://localhost:3000'
+  : 'https://taxtransfer.com'
+
 // Function to generate a JWT token
 export const generateToken = (user) => {
     return jwt.sign(

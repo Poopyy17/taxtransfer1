@@ -14,17 +14,19 @@ const reducer = (state, action) => {
         case 'FETCH_REQUEST':
             return { ...state, loading: true };
         case 'FETCH_SUCCESS':
-            return { ...state, orders: action.payload, loading: false };
+            // Sort orders by date in descending order
+            const sortedOrders = action.payload.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            return { ...state, orders: sortedOrders, loading: false };
         case 'FETCH_FAIL':
             return { ...state, loading: false, error: action.payload };
         case 'DELETE_REQUEST':
-            return {...state, loadingDelete: true, successDelete: false };
+            return { ...state, loadingDelete: true, successDelete: false };
         case 'DELETE_SUCCESS':
-            return {...state, loadingDelete: false, successDelete: true };
+            return { ...state, loadingDelete: false, successDelete: true };
         case 'DELETE_FAIL':
-            return {...state, loadingDelete: false };
+            return { ...state, loadingDelete: false };
         case 'DELETE_RESET':
-            return {...state, loadingDelete: false, successDelete: false };
+            return { ...state, loadingDelete: false, successDelete: false };
         default:
             return state;
     }
@@ -35,6 +37,7 @@ export default function ValidationScreen() {
     const [{ loading, error, orders, loadingDelete, successDelete }, dispatch] = useReducer(reducer, {
         loading: true,
         error: '',
+        orders: [],
     });
 
     const { state } = useContext(Store);
@@ -49,23 +52,23 @@ export default function ValidationScreen() {
                 });
                 dispatch({ type: 'FETCH_SUCCESS', payload: data });
             } catch (error) {
-                dispatch({ 
-                    type: 'FETCH_FAIL', 
-                    payload: getError(error) 
+                dispatch({
+                    type: 'FETCH_FAIL',
+                    payload: getError(error),
                 });
             }
         };
-        if(successDelete) {
+        if (successDelete) {
             dispatch({ type: 'DELETE_RESET' });
         } else {
-          fetchData();
+            fetchData();
         }
     }, [userInfo, successDelete]);
 
     const deleteHandler = async (order) => {
         if (window.confirm('Are you sure to delete?')) {
             try {
-                dispatch({ type: 'DELETE_REQUEST' })
+                dispatch({ type: 'DELETE_REQUEST' });
                 await axios.delete(`/api/orders/${order._id}`, {
                     headers: { authorization: `Bearer ${userInfo.token}` },
                 });
@@ -73,12 +76,12 @@ export default function ValidationScreen() {
                 dispatch({ type: 'DELETE_SUCCESS' });
             } catch (error) {
                 toast.error(getError(error));
-                dispatch({ 
+                dispatch({
                     type: 'DELETE_FAIL',
                 });
             }
         }
-      }
+    };
 
     return (
         <div>
@@ -131,9 +134,9 @@ export default function ValidationScreen() {
                                     </Button>
                                     &nbsp;
                                     <Button
-                                    type='button'
-                                    variant='light'
-                                    onClick={() => deleteHandler(order)}
+                                        type="button"
+                                        variant="light"
+                                        onClick={() => deleteHandler(order)}
                                     >
                                         Delete
                                     </Button>

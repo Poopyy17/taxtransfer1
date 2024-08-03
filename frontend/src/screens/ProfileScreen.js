@@ -15,10 +15,14 @@ const reducer = (state, action) => {
       return { ...state, loadingUpdate: false };
     case 'UPDATE_FAIL':
       return { ...state, loadingUpdate: false };
-
     default:
       return state;
   }
+};
+
+const validatePassword = (password) => {
+  const passwordRegex = /^(?=.*[A-Z])(?=.*\d).+$/; // Must contain at least one uppercase letter and one number
+  return passwordRegex.test(password);
 };
 
 export default function ProfileScreen() {
@@ -35,6 +39,17 @@ export default function ProfileScreen() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+
+    if (password && !validatePassword(password)) {
+      toast.error('Password must contain at least one uppercase letter and one number');
+      return;
+    }
+
     try {
       const { data } = await axios.put(
         '/api/users/profile',
@@ -55,7 +70,7 @@ export default function ProfileScreen() {
       toast.success('User updated successfully');
     } catch (err) {
       dispatch({
-        type: 'FETCH_FAIL',
+        type: 'UPDATE_FAIL',
       });
       toast.error(getError(err));
     }
@@ -76,7 +91,7 @@ export default function ProfileScreen() {
             required
           />
         </Form.Group>
-        <Form.Group className="mb-3" controlId="name">
+        <Form.Group className="mb-3" controlId="email">
           <Form.Label>Email</Form.Label>
           <Form.Control
             type="email"
@@ -92,7 +107,7 @@ export default function ProfileScreen() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Group>
-        <Form.Group className="mb-3" controlId="password">
+        <Form.Group className="mb-3" controlId="confirmPassword">
           <Form.Label>Confirm Password</Form.Label>
           <Form.Control
             type="password"

@@ -141,7 +141,7 @@ export const payOrderEmailTemplate = (order) => {
     return `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; text-align: center;">
         <h1 style="background-color: #007bff; color: #fff; padding: 10px 0; margin: 0;">Tax Transfer</h1>
-        <h2 style="color: #007bff;">Request Declined</h2>
+        <h2 style="color: #7a0012;">Request Declined</h2>
         <p><strong>Admin has desclined your request.</strong></p>
         <p><strong>User:</strong> ${order.user.name}</p>
         <h3>Order Details</h3>

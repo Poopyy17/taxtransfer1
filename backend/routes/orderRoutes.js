@@ -95,7 +95,7 @@ orderRouter.put(
       mailgun().messages().send({
         from: 'TaxTransfer <mailgun@sandbox92e733a6402948019e0b612228cadad3.mailgun.org>',
         to: `${order.user.name} <taxtransfer69@gmail.com>`,
-        subject: `Paid Transaction ${order._id}`,
+        subject: `Request Approved ${order._id}`,
         html: payOrderEmailTemplate1(order),
       }, 
       (error, body) => {
@@ -129,7 +129,7 @@ orderRouter.put(
       mailgun().messages().send({
         from: 'TaxTransfer <mailgun@sandbox92e733a6402948019e0b612228cadad3.mailgun.org>',
         to: `${order.user.name} <taxtransfer69@gmail.com>`,
-        subject: `Paid Transaction ${order._id}`,
+        subject: `Request Declined ${order._id}`,
         html: payOrderEmailTemplate2(order),
       }, 
       (error, body) => {

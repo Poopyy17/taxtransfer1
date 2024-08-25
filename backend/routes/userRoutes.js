@@ -63,7 +63,7 @@ userRouter.post(
     const user = await User.findOne({ email: req.body.email });
     if (user) {
       const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: '3h',
+        expiresIn: '30d',
       });
       user.resetToken = token;
       await user.save();

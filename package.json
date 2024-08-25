@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "cd backend && npm install  && cd ../frontend && npm install && npm run build",
-    "start": "cd backend && npm start && cd ../frontend && npm start",
+    "build": "cd frontend && npm install && npm run build",
+    "start": "npm run build && cd backend && npm install && npm start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

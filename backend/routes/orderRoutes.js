@@ -1,6 +1,6 @@
 import express from 'express';
 import expressAsyncHandler from 'express-async-handler';
-import { isAuth, isAdmin, mailgun, payOrderEmailTemplate, payOrderEmailTemplate1, payOrderEmailTemplate2, payOrderEmailTemplate3 } from '../utils.js';
+import { isAuth, isAdmin, mailgun, payOrderEmailTemplate, payOrderEmailTemplate1, payOrderEmailTemplate2, payOrderEmailTemplate3, payOrderEmailTemplate4 } from '../utils.js';
 import Order from '../models/OrderModel.js';
 
 const orderRouter = express.Router();
@@ -207,7 +207,10 @@ orderRouter.post(
   isAuth,
   expressAsyncHandler(async (req, res) => {
     const orderId = req.params.id;
-    const order = await Order.findById(orderId);
+    const order = await Order.findById(req.params.id).populate(
+      'user',
+      'email name'
+    );
     if (order) {
       if (order.reviews.find((x) => x.name === req.user.name)) {
         return res
@@ -222,6 +225,20 @@ orderRouter.post(
       };
       order.reviews.push(review);
       const updatedOrder = await order.save();
+      mailgun().messages().send({
+        from: 'TaxTransfer <mailgun@sandbox92e733a6402948019e0b612228cadad3.mailgun.org>',
+        to: `${order.user.name} <taxtransfer69@gmail.com>`,
+        subject: `New Validation ${order._id}`,
+        html: payOrderEmailTemplate4(order),
+      }, 
+      (error, body) => {
+        if(error) {
+          console.log(error);
+        } else {
+          console.log(body);
+        }
+      }
+    );
       res.status(201).send({
         message: 'Validation Created',
         review: updatedOrder.reviews,

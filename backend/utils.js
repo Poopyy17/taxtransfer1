@@ -211,3 +211,18 @@ export const payOrderEmailTemplate = (order) => {
       </div>
     `;
   }
+
+  export const payOrderEmailTemplate4 = (order) => {
+    return `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; text-align: center;">
+        <h1 style="background-color: #007bff; color: #fff; padding: 10px 0; margin: 0;">Tax Transfer</h1>
+        <h2 style="color: #007bff;">New Validation</h2>
+        <p><strong>Admin has validated your request.</strong></p>
+        <p><strong>User:</strong> ${order.user.name}</p>
+        <h3>Order Details</h3>
+        <p><strong>Order ID:</strong> ${order._id}</p>
+        <p><strong>Date:</strong> ${order.createdAt.toString().substring(0, 10)}</p>
+        <p>You may proceed to the next step of the transaction.</p>
+      </div>
+    `;
+  }

@@ -54,7 +54,7 @@ function HomeScreen() {
         <div>
             <header className="hero-section">
                 <div className="hero-content">
-                    <h1><strong>Welcome to Property Tax Transferral</strong></h1>
+                    <h1><strong>Optimizing Tax Transfer</strong></h1>
                     <p>Your trusted partner for seamless tax transfer services</p>
                     <Button onClick={getStartedHandler} className="btn-primary1">
                         Get Started

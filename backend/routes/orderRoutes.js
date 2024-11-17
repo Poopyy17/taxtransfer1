@@ -1,6 +1,15 @@
 import express from 'express';
 import expressAsyncHandler from 'express-async-handler';
-import { isAuth, isAdmin, mailgun, payOrderEmailTemplate, payOrderEmailTemplate1, payOrderEmailTemplate2, payOrderEmailTemplate3, payOrderEmailTemplate4 } from '../utils.js';
+import {
+  isAuth,
+  isAdmin,
+  mailgun,
+  payOrderEmailTemplate,
+  payOrderEmailTemplate1,
+  payOrderEmailTemplate2,
+  payOrderEmailTemplate3,
+  payOrderEmailTemplate4,
+} from '../utils.js';
 import Order from '../models/OrderModel.js';
 
 const orderRouter = express.Router();
@@ -37,26 +46,28 @@ orderRouter.post(
     order = await Order.findById(order._id).populate('user', 'email name');
 
     // Send confirmation email
-    mailgun().messages().send({
-      from: 'TaxTransfer <mailgun@sandbox92e733a6402948019e0b612228cadad3.mailgun.org>',
-      to: `${order.user.name} <taxtransfer69@gmail.com>`,
-      subject: `Request Submitted ${order._id}`,
-      html: payOrderEmailTemplate3(order),
-    }, 
-    (error, body) => {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log(body);
-      }
-    });
+    mailgun()
+      .messages()
+      .send(
+        {
+          from: 'TaxTransfer <mailgun@sandboxc6254711b6004298890366ab9c82b237.mailgun.org>',
+          to: `${order.user.name} <taxtransfer69@gmail.com>`,
+          subject: `Request Submitted ${order._id}`,
+          html: payOrderEmailTemplate3(order),
+        },
+        (error, body) => {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log(body);
+          }
+        }
+      );
 
     // Send response with the created order
     res.status(201).send({ message: 'Request Submitted', order });
   })
 );
-
-
 
 orderRouter.get(
   '/mine',
@@ -92,20 +103,23 @@ orderRouter.put(
       order.isApproved = true;
       order.approvedAt = Date.now();
       await order.save();
-      mailgun().messages().send({
-        from: 'TaxTransfer <mailgun@sandbox92e733a6402948019e0b612228cadad3.mailgun.org>',
-        to: `${order.user.name} <taxtransfer69@gmail.com>`,
-        subject: `Request Approved ${order._id}`,
-        html: payOrderEmailTemplate1(order),
-      }, 
-      (error, body) => {
-        if(error) {
-          console.log(error);
-        } else {
-          console.log(body);
-        }
-      }
-    );
+      mailgun()
+        .messages()
+        .send(
+          {
+            from: 'TaxTransfer <mailgun@sandboxc6254711b6004298890366ab9c82b237.mailgun.org>',
+            to: `${order.user.name} <taxtransfer69@gmail.com>`,
+            subject: `Request Approved ${order._id}`,
+            html: payOrderEmailTemplate1(order),
+          },
+          (error, body) => {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log(body);
+            }
+          }
+        );
       res.send({ message: 'Request Approved' });
     } else {
       res.status(404).send({ message: 'Request Not Found' });
@@ -126,20 +140,23 @@ orderRouter.put(
       order.isDeclined = true;
       order.declinedAt = Date.now();
       await order.save();
-      mailgun().messages().send({
-        from: 'TaxTransfer <mailgun@sandbox92e733a6402948019e0b612228cadad3.mailgun.org>',
-        to: `${order.user.name} <taxtransfer69@gmail.com>`,
-        subject: `Request Declined ${order._id}`,
-        html: payOrderEmailTemplate2(order),
-      }, 
-      (error, body) => {
-        if(error) {
-          console.log(error);
-        } else {
-          console.log(body);
-        }
-      }
-    );
+      mailgun()
+        .messages()
+        .send(
+          {
+            from: 'TaxTransfer <mailgun@sandboxc6254711b6004298890366ab9c82b237.mailgun.org>',
+            to: `${order.user.name} <taxtransfer69@gmail.com>`,
+            subject: `Request Declined ${order._id}`,
+            html: payOrderEmailTemplate2(order),
+          },
+          (error, body) => {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log(body);
+            }
+          }
+        );
       res.send({ message: 'Request Declined' });
     } else {
       res.status(404).send({ message: 'Request Not Found' });
@@ -166,20 +183,23 @@ orderRouter.put(
       };
 
       const updatedOrder = await order.save();
-      mailgun().messages().send({
-        from: 'TaxTransfer <mailgun@sandbox92e733a6402948019e0b612228cadad3.mailgun.org>',
-        to: `${order.user.name} <taxtransfer69@gmail.com>`,
-        subject: `Paid Transaction ${order._id}`,
-        html: payOrderEmailTemplate(order),
-      }, 
-      (error, body) => {
-        if(error) {
-          console.log(error);
-        } else {
-          console.log(body);
-        }
-      }
-    );
+      mailgun()
+        .messages()
+        .send(
+          {
+            from: 'TaxTransfer <mailgun@sandboxc6254711b6004298890366ab9c82b237.mailgun.org>',
+            to: `${order.user.name} <taxtransfer69@gmail.com>`,
+            subject: `Paid Transaction ${order._id}`,
+            html: payOrderEmailTemplate(order),
+          },
+          (error, body) => {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log(body);
+            }
+          }
+        );
       res.send({ message: 'Order Paid', order: updatedOrder });
     } else {
       res.status(404).send({ message: 'Transaction not found' });
@@ -219,26 +239,29 @@ orderRouter.post(
       }
       // Ensure 'image' is included in the request body
       const review = {
-        image: req.body.image, 
+        image: req.body.image,
         images: req.body.images,
         comment: req.body.comment,
       };
       order.reviews.push(review);
       const updatedOrder = await order.save();
-      mailgun().messages().send({
-        from: 'TaxTransfer <mailgun@sandbox92e733a6402948019e0b612228cadad3.mailgun.org>',
-        to: `${order.user.name} <taxtransfer69@gmail.com>`,
-        subject: `New Validation ${order._id}`,
-        html: payOrderEmailTemplate4(order),
-      }, 
-      (error, body) => {
-        if(error) {
-          console.log(error);
-        } else {
-          console.log(body);
-        }
-      }
-    );
+      mailgun()
+        .messages()
+        .send(
+          {
+            from: 'TaxTransfer <mailgun@sandboxc6254711b6004298890366ab9c82b237.mailgun.org>',
+            to: `${order.user.name} <taxtransfer69@gmail.com>`,
+            subject: `New Validation ${order._id}`,
+            html: payOrderEmailTemplate4(order),
+          },
+          (error, body) => {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log(body);
+            }
+          }
+        );
       res.status(201).send({
         message: 'Validation Created',
         review: updatedOrder.reviews,
@@ -248,6 +271,5 @@ orderRouter.post(
     }
   })
 );
-
 
 export default orderRouter;

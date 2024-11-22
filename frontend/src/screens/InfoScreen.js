@@ -51,6 +51,7 @@ export default function InfoScreen() {
   const [lastName, setLastName] = useState('');
   const [firstName, setFirstName] = useState('');
   const [middleName, setMiddleName] = useState('');
+  const [suffix, setSuffix] = useState('');
 
   const [block, setBlock] = useState('');
   const [lot, setLot] = useState('');
@@ -61,9 +62,12 @@ export default function InfoScreen() {
   const [recipientLastName, setRecipientLastName] = useState('');
   const [recipientFirstName, setRecipientFirstName] = useState('');
   const [recipientMiddleName, setRecipientMiddleName] = useState('');
+  const [recipientContactNumber, setRecipientContactNumber] = useState('');
+  const [recipientEmail, setRecipientEmail] = useState('');
+  const [recipientSuffix, setRecipientSuffix] = useState('');
 
   const combineFullName = () => {
-    return `${lastName}, ${firstName} ${middleName}`.trim();
+    return `${lastName}, ${firstName} ${middleName} ${suffix}`.trim();
   };
 
   const combineAddress = () => {
@@ -71,7 +75,7 @@ export default function InfoScreen() {
   };
 
   const combineRecipientName = () => {
-    return `${recipientLastName}, ${recipientFirstName} ${recipientMiddleName}`.trim();
+    return `${recipientLastName}, ${recipientFirstName} ${recipientMiddleName} ${recipientSuffix}`.trim();
   };
 
   useEffect(() => {
@@ -125,6 +129,8 @@ export default function InfoScreen() {
         category,
         recipientName: combineRecipientName(),
         validId,
+        recipientContactNumber,
+        recipientEmail,
       },
     });
     navigate('/payment');
@@ -174,7 +180,7 @@ export default function InfoScreen() {
           <Form.Group className="mb-3">
             <Form.Label>Full Name</Form.Label>
             <div className="row g-3">
-              <div className="col-md-5">
+              <div className="col-md-6">
                 <Form.Control
                   placeholder="Last Name"
                   value={lastName}
@@ -182,7 +188,7 @@ export default function InfoScreen() {
                   required
                 />
               </div>
-              <div className="col-md-5">
+              <div className="col-md-6">
                 <Form.Control
                   placeholder="First Name"
                   value={firstName}
@@ -190,11 +196,20 @@ export default function InfoScreen() {
                   required
                 />
               </div>
-              <div className="col-md-2">
+            </div>
+            <div className="row g-3 mt-3">
+              <div className="col-md-6">
                 <Form.Control
-                  placeholder="MI"
+                  placeholder="Middle Name"
                   value={middleName}
                   onChange={(e) => setMiddleName(e.target.value)}
+                />
+              </div>
+              <div className="col-md-6">
+                <Form.Control
+                  placeholder="Suffix"
+                  value={suffix}
+                  onChange={(e) => setSuffix(e.target.value)}
                 />
               </div>
             </div>
@@ -265,7 +280,7 @@ export default function InfoScreen() {
           <Form.Group className="mb-3">
             <Form.Label>Recipient Name</Form.Label>
             <div className="row g-3">
-              <div className="col-md-5">
+              <div className="col-md-6">
                 <Form.Control
                   placeholder="Last Name"
                   value={recipientLastName}
@@ -273,7 +288,7 @@ export default function InfoScreen() {
                   required
                 />
               </div>
-              <div className="col-md-5">
+              <div className="col-md-6">
                 <Form.Control
                   placeholder="First Name"
                   value={recipientFirstName}
@@ -281,14 +296,45 @@ export default function InfoScreen() {
                   required
                 />
               </div>
-              <div className="col-md-2">
+            </div>
+            <div className="row g-3 mt-3">
+              <div className="col-md-6">
                 <Form.Control
-                  placeholder="MI"
+                  placeholder="Middle Name"
                   value={recipientMiddleName}
                   onChange={(e) => setRecipientMiddleName(e.target.value)}
                 />
               </div>
+              <div className="col-md-6">
+                <Form.Control
+                  placeholder="Suffix"
+                  value={recipientSuffix}
+                  onChange={(e) => setRecipientSuffix(e.target.value)}
+                />
+              </div>
             </div>
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Recipient Contact Number</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="09XXXXXXXXX"
+              value={recipientContactNumber}
+              onChange={(e) => setRecipientContactNumber(e.target.value)}
+              required
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Recipient Email</Form.Label>
+            <Form.Control
+              type="email"
+              placeholder="Email"
+              value={recipientEmail}
+              onChange={(e) => setRecipientEmail(e.target.value)}
+              required
+            />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="validId">

@@ -1,9 +1,9 @@
 import express from 'express';
 import expressAsyncHandler from 'express-async-handler';
+import axios from 'axios';
 import {
   isAuth,
   isAdmin,
-  mailgun,
   payOrderEmailTemplate,
   payOrderEmailTemplate1,
   payOrderEmailTemplate2,
@@ -31,7 +31,11 @@ orderRouter.post(
     // Create new order with provided properties
     const newOrder = new Order({
       orderItems: req.body.orderItems.map((x) => ({ ...x, service: x._id })),
-      shippingAddress: req.body.shippingAddress,
+      shippingAddress: {
+        ...req.body.shippingAddress,
+        recipientContactNumber: req.body.shippingAddress.recipientContactNumber,
+        recipientEmail: req.body.shippingAddress.recipientEmail,
+      },
       paymentMethod: req.body.paymentMethod,
       itemsPrice: req.body.itemsPrice,
       taxPrice: req.body.taxPrice,
@@ -45,24 +49,26 @@ orderRouter.post(
     // Populate the user field
     order = await Order.findById(order._id).populate('user', 'email name');
 
-    // Send confirmation email
-    mailgun()
-      .messages()
-      .send(
+    // Send confirmation email using Getform.io
+    try {
+      await axios.post(
+        'https://getform.io/f/amddyvlb',
         {
-          from: 'TaxTransfer <mailgun@sandboxc6254711b6004298890366ab9c82b237.mailgun.org>',
-          to: `${order.user.name} <taxtransfer69@gmail.com>`,
+          email: order.user.email,
           subject: `Request Submitted ${order._id}`,
-          html: payOrderEmailTemplate3(order),
+          message: payOrderEmailTemplate3(order),
         },
-        (error, body) => {
-          if (error) {
-            console.log(error);
-          } else {
-            console.log(body);
-          }
+        {
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
         }
       );
+      console.log('Email sent successfully');
+    } catch (error) {
+      console.log('Error sending email:', error);
+    }
 
     // Send response with the created order
     res.status(201).send({ message: 'Request Submitted', order });
@@ -103,23 +109,28 @@ orderRouter.put(
       order.isApproved = true;
       order.approvedAt = Date.now();
       await order.save();
-      mailgun()
-        .messages()
-        .send(
+
+      // Send approval email using Getform.io
+      try {
+        await axios.post(
+          'https://getform.io/f/amddyvlb',
           {
-            from: 'TaxTransfer <mailgun@sandboxc6254711b6004298890366ab9c82b237.mailgun.org>',
-            to: `${order.user.name} <taxtransfer69@gmail.com>`,
+            email: order.user.email,
             subject: `Request Approved ${order._id}`,
-            html: payOrderEmailTemplate1(order),
+            message: payOrderEmailTemplate1(order),
           },
-          (error, body) => {
-            if (error) {
-              console.log(error);
-            } else {
-              console.log(body);
-            }
+          {
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
           }
         );
+        console.log('Email sent successfully');
+      } catch (error) {
+        console.log('Error sending email:', error);
+      }
+
       res.send({ message: 'Request Approved' });
     } else {
       res.status(404).send({ message: 'Request Not Found' });
@@ -140,23 +151,28 @@ orderRouter.put(
       order.isDeclined = true;
       order.declinedAt = Date.now();
       await order.save();
-      mailgun()
-        .messages()
-        .send(
+
+      // Send decline email using Getform.io
+      try {
+        await axios.post(
+          'https://getform.io/f/amddyvlb',
           {
-            from: 'TaxTransfer <mailgun@sandboxc6254711b6004298890366ab9c82b237.mailgun.org>',
-            to: `${order.user.name} <taxtransfer69@gmail.com>`,
+            email: order.user.email,
             subject: `Request Declined ${order._id}`,
-            html: payOrderEmailTemplate2(order),
+            message: payOrderEmailTemplate2(order),
           },
-          (error, body) => {
-            if (error) {
-              console.log(error);
-            } else {
-              console.log(body);
-            }
+          {
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
           }
         );
+        console.log('Email sent successfully');
+      } catch (error) {
+        console.log('Error sending email:', error);
+      }
+
       res.send({ message: 'Request Declined' });
     } else {
       res.status(404).send({ message: 'Request Not Found' });
@@ -183,23 +199,28 @@ orderRouter.put(
       };
 
       const updatedOrder = await order.save();
-      mailgun()
-        .messages()
-        .send(
+
+      // Send payment confirmation email using Getform.io
+      try {
+        await axios.post(
+          'https://getform.io/f/amddyvlb',
           {
-            from: 'TaxTransfer <mailgun@sandboxc6254711b6004298890366ab9c82b237.mailgun.org>',
-            to: `${order.user.name} <taxtransfer69@gmail.com>`,
+            email: order.user.email,
             subject: `Paid Transaction ${order._id}`,
-            html: payOrderEmailTemplate(order),
+            message: payOrderEmailTemplate(order),
           },
-          (error, body) => {
-            if (error) {
-              console.log(error);
-            } else {
-              console.log(body);
-            }
+          {
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
           }
         );
+        console.log('Email sent successfully');
+      } catch (error) {
+        console.log('Error sending email:', error);
+      }
+
       res.send({ message: 'Order Paid', order: updatedOrder });
     } else {
       res.status(404).send({ message: 'Transaction not found' });
@@ -245,23 +266,28 @@ orderRouter.post(
       };
       order.reviews.push(review);
       const updatedOrder = await order.save();
-      mailgun()
-        .messages()
-        .send(
+
+      // Send review notification email using Getform.io
+      try {
+        await axios.post(
+          'https://getform.io/f/amddyvlb',
           {
-            from: 'TaxTransfer <mailgun@sandboxc6254711b6004298890366ab9c82b237.mailgun.org>',
-            to: `${order.user.name} <taxtransfer69@gmail.com>`,
+            email: order.user.email,
             subject: `New Validation ${order._id}`,
-            html: payOrderEmailTemplate4(order),
+            message: payOrderEmailTemplate4(order),
           },
-          (error, body) => {
-            if (error) {
-              console.log(error);
-            } else {
-              console.log(body);
-            }
+          {
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
           }
         );
+        console.log('Email sent successfully');
+      } catch (error) {
+        console.log('Error sending email:', error);
+      }
+
       res.status(201).send({
         message: 'Validation Created',
         review: updatedOrder.reviews,

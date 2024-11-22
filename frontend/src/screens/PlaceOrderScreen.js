@@ -16,25 +16,23 @@ import axios from 'axios';
 import LoadingBox from '../Component/LoadingBox';
 
 const reducer = (state, action) => {
-    switch (action.type) {
-        case 'CREATE_REQUEST':
-            return {...state, loading: true };
-        case 'CREATE_SUCCESS':
-            return {...state, loading: false };
-        case 'CREATE_FAIL':
-            return {...state, loading: false };
-
-        default:
-            return state;
-    }
-}
+  switch (action.type) {
+    case 'CREATE_REQUEST':
+      return { ...state, loading: true };
+    case 'CREATE_SUCCESS':
+      return { ...state, loading: false };
+    case 'CREATE_FAIL':
+      return { ...state, loading: false };
+    default:
+      return state;
+  }
+};
 
 export default function PlaceOrderScreen() {
-
   const navigate = useNavigate();
 
   const [{ loading }, dispatch] = useReducer(reducer, {
-    loading: false
+    loading: false,
   });
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -54,47 +52,47 @@ export default function PlaceOrderScreen() {
   };
 
   const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100;
-  
+
   cart.itemsPrice = round2(
     cart.cartItems.reduce((a, c) => a + c.quantity * c.price, 0)
   );
 
   cart.taxPrice = round2(0.15 * cart.itemsPrice);
   cart.totalPrice = cart.itemsPrice + cart.taxPrice;
-  
+
   const placeOrderHandler = async () => {
     try {
-        dispatch({ type: 'CREATE_REQUEST'});
+      dispatch({ type: 'CREATE_REQUEST' });
 
-        const { data } = await axios.post(
-            'api/orders',
-            {
-                orderItems: cart.cartItems,
-                shippingAddress: cart.shippingAddress,
-                paymentMethod: cart.paymentMethod,
-                itemsPrice: cart.itemsPrice,
-                taxPrice: cart.taxPrice,
-                totalPrice: cart.totalPrice,
-            },
-            {
-                headers: {
-                    authorization: `Bearer ${userInfo.token}`,
-                },
-            }
-        );
-        ctxDispatch({ type: 'CART_CLEAR' });
-        dispatch({ type: 'CREATE_SUCCESS' });
-        localStorage.removeItem('cartItems');
-        navigate(`/requests/${data.order._id}`)
+      const { data } = await axios.post(
+        'api/orders',
+        {
+          orderItems: cart.cartItems,
+          shippingAddress: cart.shippingAddress,
+          paymentMethod: cart.paymentMethod,
+          itemsPrice: cart.itemsPrice,
+          taxPrice: cart.taxPrice,
+          totalPrice: cart.totalPrice,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${userInfo.token}`,
+          },
+        }
+      );
+      ctxDispatch({ type: 'CART_CLEAR' });
+      dispatch({ type: 'CREATE_SUCCESS' });
+      localStorage.removeItem('cartItems');
+      navigate(`/requests/${data.order._id}`);
     } catch (error) {
-        dispatch({ type: 'CREATE_FAIL' });
-        toast.error(getError(error))
+      dispatch({ type: 'CREATE_FAIL' });
+      toast.error(getError(error));
     }
   };
 
   useEffect(() => {
     if (!cart.paymentMethod) {
-        navigate('/payment')
+      navigate('/payment');
     }
   }, [cart, navigate]);
 
@@ -123,6 +121,14 @@ export default function PlaceOrderScreen() {
                   <tr>
                     <td className="info-label">Recipient Name:</td>
                     <td>{cart.shippingAddress.recipientName}</td>
+                  </tr>
+                  <tr>
+                    <td className="info-label">Recipient Contact Number:</td>
+                    <td>{cart.shippingAddress.recipientContactNumber}</td>
+                  </tr>
+                  <tr>
+                    <td className="info-label">Recipient Email:</td>
+                    <td>{cart.shippingAddress.recipientEmail}</td>
                   </tr>
                   <tr>
                     <td className="info-label">Type of Valid ID:</td>
@@ -155,11 +161,14 @@ export default function PlaceOrderScreen() {
                       src={cart.shippingAddress.image}
                       alt="Primary document"
                       className="document-image"
-                      onClick={() => handleImageClick(cart.shippingAddress.image)}
+                      onClick={() =>
+                        handleImageClick(cart.shippingAddress.image)
+                      }
                     />
                   </Col>
                 )}
-                {cart.shippingAddress.images && cart.shippingAddress.images.length > 0 ? (
+                {cart.shippingAddress.images &&
+                cart.shippingAddress.images.length > 0 ? (
                   cart.shippingAddress.images.map((image, index) => (
                     <Col xs={12} md={6} lg={4} className="mb-3" key={index}>
                       <img
@@ -170,62 +179,67 @@ export default function PlaceOrderScreen() {
                       />
                     </Col>
                   ))
-                ) : (
-                  cart.shippingAddress.image ? null : (
-                    <Col xs={12}>
-                      <ListGroup.Item>No documents uploaded</ListGroup.Item>
-                    </Col>
-                  )
+                ) : cart.shippingAddress.image ? null : (
+                  <Col xs={12}>
+                    <ListGroup.Item>No documents uploaded</ListGroup.Item>
+                  </Col>
                 )}
               </Row>
             </Card.Body>
           </Card>
         </Col>
         <Col md={4}>
-        <Card>
+          <Card>
             <Card.Body>
-                <Card.Title>Summary</Card.Title>
-                <ListGroup variant='flush'>
-                    <ListGroup.Item>
-                        <Row>
-                            <Col>Service</Col>
-                            <Col>₱{cart.itemsPrice.toFixed(2)}</Col>
-                        </Row>
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                        <Row>
-                            <Col>Tax</Col>
-                            <Col>₱{cart.taxPrice.toFixed(2)}</Col>
-                        </Row>
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                        <Row>
-                            
-                            <Col><strong>Total</strong></Col>
-                            <Col><strong>₱{cart.totalPrice.toFixed(2)}</strong></Col>
-                        </Row>
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                        <div className='d-grid'>
-                            <Button
-                                type="button"
-                                onClick={placeOrderHandler}
-                                disabled={cart.shippingAddress.images.length === 0}
-                            >
-                                Submit Request
-                            </Button>
-                            {loading && <LoadingBox></LoadingBox>}
-                        </div>
-                    </ListGroup.Item>
-                </ListGroup>
+              <Card.Title>Summary</Card.Title>
+              <ListGroup variant="flush">
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Service</Col>
+                    <Col>₱{cart.itemsPrice.toFixed(2)}</Col>
+                  </Row>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Tax</Col>
+                    <Col>₱{cart.taxPrice.toFixed(2)}</Col>
+                  </Row>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <Row>
+                    <Col>
+                      <strong>Total</strong>
+                    </Col>
+                    <Col>
+                      <strong>₱{cart.totalPrice.toFixed(2)}</strong>
+                    </Col>
+                  </Row>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <div className="d-grid">
+                    <Button
+                      type="button"
+                      onClick={placeOrderHandler}
+                      disabled={cart.shippingAddress.images.length === 0}
+                    >
+                      Submit Request
+                    </Button>
+                    {loading && <LoadingBox></LoadingBox>}
+                  </div>
+                </ListGroup.Item>
+              </ListGroup>
             </Card.Body>
-        </Card>
+          </Card>
         </Col>
       </Row>
 
       <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Body>
-          <img src={selectedImage} alt="Zoomed document" style={{ width: '100%' }} />
+          <img
+            src={selectedImage}
+            alt="Zoomed document"
+            style={{ width: '100%' }}
+          />
         </Modal.Body>
       </Modal>
     </div>
